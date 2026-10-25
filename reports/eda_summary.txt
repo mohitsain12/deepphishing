@@ -1,0 +1,14 @@
+============================================================
+EXPLORATORY DATA ANALYSIS SUMMARY
+============================================================
+
+Dataset: data/raw/phishing_dataset.csv
+Total Samples: 11000
+Features: 2
+Missing Values: 0
+Duplicates: 4014
+
+Class 0 (Legitimate): 5500
+Class 1 (Phishing): 5500
+Imbalance Ratio: 1.0000
+→ Dataset is well-balanced ✓

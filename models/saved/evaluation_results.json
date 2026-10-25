@@ -1,0 +1,98 @@
+{
+  "Random Forest": {
+    "model_name": "Random Forest",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "auc_roc": 1.0,
+    "avg_precision": 1.0,
+    "specificity": 1.0,
+    "confusion_matrix": [
+      [
+        844,
+        0
+      ],
+      [
+        0,
+        554
+      ]
+    ],
+    "tp": 554,
+    "tn": 844,
+    "fp": 0,
+    "fn": 0
+  },
+  "Gradient Boosting": {
+    "model_name": "Gradient Boosting",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "auc_roc": 1.0,
+    "avg_precision": 1.0,
+    "specificity": 1.0,
+    "confusion_matrix": [
+      [
+        844,
+        0
+      ],
+      [
+        0,
+        554
+      ]
+    ],
+    "tp": 554,
+    "tn": 844,
+    "fp": 0,
+    "fn": 0
+  },
+  "Logistic Regression": {
+    "model_name": "Logistic Regression",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "auc_roc": 1.0,
+    "avg_precision": 1.0,
+    "specificity": 1.0,
+    "confusion_matrix": [
+      [
+        844,
+        0
+      ],
+      [
+        0,
+        554
+      ]
+    ],
+    "tp": 554,
+    "tn": 844,
+    "fp": 0,
+    "fn": 0
+  },
+  "SVM": {
+    "model_name": "SVM",
+    "accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1_score": 1.0,
+    "auc_roc": 1.0,
+    "avg_precision": 1.0,
+    "specificity": 1.0,
+    "confusion_matrix": [
+      [
+        844,
+        0
+      ],
+      [
+        0,
+        554
+      ]
+    ],
+    "tp": 554,
+    "tn": 844,
+    "fp": 0,
+    "fn": 0
+  }
+}

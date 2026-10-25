@@ -1,0 +1,131 @@
+# ============================================================
+# Deep Learning Based Phishing URL Detection - Configuration
+# ============================================================
+
+project:
+  name: "Deep Learning Based Phishing URL Detection"
+  version: "1.0.0"
+  author: "Mohit"
+  description: "A deep learning system for detecting phishing URLs"
+
+paths:
+  raw_data: "data/raw"
+  processed_data: "data/processed"
+  models: "models/saved"
+  logs: "logs"
+  reports: "reports"
+  figures: "reports/figures"
+
+data:
+  dataset_url: "https://raw.githubusercontent.com/GregaVrbworksancic/PhishingDataset/master/dataset_full.csv"
+  test_size: 0.2
+  val_size: 0.1
+  random_state: 42
+  target_column: "status"
+
+features:
+  url_length: true
+  domain_length: true
+  path_length: true
+  num_dots: true
+  num_hyphens: true
+  num_underscores: true
+  num_slashes: true
+  num_question_marks: true
+  num_equals: true
+  num_at: true
+  num_ampersand: true
+  num_exclamation: true
+  num_space: true
+  num_tilde: true
+  num_comma: true
+  num_plus: true
+  num_star: true
+  num_hash: true
+  num_dollar: true
+  num_percent: true
+  has_ip: true
+  has_https: true
+  has_http: true
+  has_www: true
+  has_port: true
+  num_digits: true
+  letter_ratio: true
+  digit_ratio: true
+  special_char_ratio: true
+  has_shortening_service: true
+  num_subdomains: true
+  domain_entropy: true
+  path_entropy: true
+  is_encoded: true
+  has_suspicious_tld: true
+  url_depth: true
+
+model:
+  baseline:
+    random_forest:
+      n_estimators: 100
+      max_depth: 20
+      random_state: 42
+    logistic_regression:
+      max_iter: 1000
+      random_state: 42
+    xgboost:
+      n_estimators: 100
+      max_depth: 6
+      learning_rate: 0.1
+      random_state: 42
+
+  deep_learning:
+    input_dim: null  # Set dynamically
+    architecture:
+      - units: 256
+        activation: "relu"
+        dropout: 0.3
+        batch_norm: true
+      - units: 128
+        activation: "relu"
+        dropout: 0.3
+        batch_norm: true
+      - units: 64
+        activation: "relu"
+        dropout: 0.2
+        batch_norm: true
+      - units: 32
+        activation: "relu"
+        dropout: 0.1
+        batch_norm: false
+    optimizer: "adam"
+    learning_rate: 0.001
+    batch_size: 64
+    epochs: 100
+    early_stopping:
+      patience: 10
+      min_delta: 0.001
+      restore_best_weights: true
+
+hyperparameter_optimization:
+  method: "optuna"  # optuna or grid_search
+  n_trials: 50
+  metric: "f1"
+  search_space:
+    learning_rate: [0.0001, 0.01]
+    batch_size: [32, 64, 128]
+    dropout_rate: [0.1, 0.5]
+    num_layers: [2, 5]
+    units: [32, 256]
+
+evaluation:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1
+    - auc_roc
+    - confusion_matrix
+    - classification_report
+
+streamlit:
+  title: "🛡️ PhishGuard - Deep Learning Phishing URL Detector"
+  theme: "dark"
+  port: 8501
