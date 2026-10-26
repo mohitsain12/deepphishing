@@ -41,14 +41,6 @@ test:
 explain:
 	python -m src.explainability.explainer
 
-# Generate documentation
-docs:
-	python -m docs.generate_report
-
-# Generate presentation
-ppt:
-	python -m presentation.generate_ppt
-
 # Clean generated files
 clean:
 	rm -rf __pycache__ .pytest_cache htmlcov
@@ -56,5 +48,5 @@ clean:
 	find . -type f -name "*.pyc" -delete
 
 # Run everything
-all: data train evaluate explain docs ppt
+all: data train evaluate explain
 	@echo "Full pipeline complete!"

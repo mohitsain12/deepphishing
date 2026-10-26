@@ -33,9 +33,5 @@ requests>=2.31.0
 pytest>=7.4.0
 pytest-cov>=4.1.0
 
-# Documentation
-python-pptx>=0.6.21
-fpdf2>=2.7.0
-
 # Logging
 colorlog>=6.7.0

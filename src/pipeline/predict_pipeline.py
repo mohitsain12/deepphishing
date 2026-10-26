@@ -1,7 +1,7 @@
 """
 MODULE 11: URL Prediction Pipeline
 End-to-end inference engine for classifying arbitrary input URLs as Phishing or Legitimate.
-Supports single URL, batch URL scoring, risk level categorization, and explainable indicator heuristics.
+Supports single-URL scoring, risk-level categorization, and explainable indicator heuristics.
 """
 
 import os
@@ -124,9 +124,6 @@ class PhishingPredictor:
             'key_indicators': self._get_key_indicators(features, is_phishing),
             'features': features
         }
-
-    def predict_batch(self, urls: list) -> list:
-        return [self.predict_url(u) for u in urls]
 
     @staticmethod
     def _get_risk_level(prob: float) -> str:

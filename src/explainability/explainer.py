@@ -98,7 +98,9 @@ class PhishingExplainer:
             'url': url,
             'top_phishing_drivers': top_positive,
             'top_legitimate_drivers': top_negative,
-            'all_contributions': dict(sorted_impacts[:12])
+            # The UI looks up every listed driver in this mapping. Retain all
+            # contributions so a lower-ranked driver cannot cause a KeyError.
+            'all_contributions': dict(sorted_impacts)
         }
 
     def plot_url_explanation(self, url: str, save_path: str = "reports/figures/url_explanation.png"):

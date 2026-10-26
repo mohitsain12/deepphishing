@@ -1,13 +1,12 @@
 """
 MODULE 12: Streamlit Application
 Interactive Web Application for Phishing URL Detection powered by Deep Learning.
-Features: Single URL Inspection, Batch CSV Analysis, Model Benchmarks, and Explainable AI (XAI).
+Features: Single URL Inspection, Model Benchmarks, and Explainable AI (XAI).
 """
 
 import os
 import sys
 import pandas as pd
-import numpy as np
 import streamlit as st
 
 # Add project root to sys.path
@@ -85,10 +84,8 @@ menu = st.sidebar.radio(
     "Navigation Modules",
     [
         "🔍 Single URL Scanner",
-        "📂 Batch URL Analysis",
         "🧠 Model & Performance",
-        "🔬 Explainable AI (XAI)",
-        "🛡️ CIA Security Triad & Docs"
+        "🔬 Explainable AI (XAI)"
     ]
 )
 
@@ -155,48 +152,31 @@ if menu == "🔍 Single URL Scanner":
                 feat_df = pd.DataFrame(list(result['features'].items()), columns=["Feature", "Extracted Value"])
                 st.dataframe(feat_df.head(20), use_container_width=True)
 
-# =========================================================================
-# 2. BATCH URL ANALYSIS
-# =========================================================================
-elif menu == "📂 Batch URL Analysis":
-    st.markdown('<p class="main-header">📂 High-Throughput Batch URL Analysis</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Upload a CSV file with URL columns to process thousands of endpoints.</p>', unsafe_allow_html=True)
-    
-    uploaded_file = st.file_uploader("Upload CSV file containing 'url' column", type=["csv"])
-    
-    if uploaded_file is not None:
-        df = pd.read_csv(uploaded_file)
-        if 'url' not in df.columns:
-            st.error("Uploaded CSV must have a column named 'url'")
-        else:
-            st.write(f"Loaded {len(df)} URLs from CSV.")
-            if st.button("Start Batch Processing", type="primary"):
-                progress_bar = st.progress(0)
-                results = []
-                for idx, row in df.iterrows():
-                    res = predictor.predict_url(str(row['url']))
-                    results.append({
-                        'URL': row['url'],
-                        'Prediction': res['label'],
-                        'Probability': res['probability'],
-                        'Risk Level': res['risk_level']
-                    })
-                    progress_bar.progress((idx + 1) / len(df))
-                
-                res_df = pd.DataFrame(results)
-                st.success("Batch classification completed!")
-                st.dataframe(res_df, use_container_width=True)
-                
-                csv_data = res_df.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label="📥 Download Classified Results CSV",
-                    data=csv_data,
-                    file_name="phishing_classification_results.csv",
-                    mime="text/csv"
+            with st.expander("🔬 View XAI Feature Attribution"):
+                st.caption(
+                    "Positive impact pushes the result toward phishing; negative impact "
+                    "pushes it toward legitimate."
+                )
+                explanation = explainer.explain_url(user_url)
+                contribution_rows = [
+                    {
+                        "Feature": feature,
+                        "Extracted Value": details["raw_value"],
+                        "Attribution Impact": details["impact"],
+                        "Direction": details["direction"],
+                    }
+                    for feature, details in list(
+                        explanation["all_contributions"].items()
+                    )[:10]
+                ]
+                st.dataframe(
+                    pd.DataFrame(contribution_rows),
+                    use_container_width=True,
+                    hide_index=True,
                 )
 
 # =========================================================================
-# 3. MODEL & PERFORMANCE
+# 2. MODEL & PERFORMANCE
 # =========================================================================
 elif menu == "🧠 Model & Performance":
     st.markdown('<p class="main-header">🧠 Model Benchmarks & Performance Metrics</p>', unsafe_allow_html=True)
@@ -226,7 +206,7 @@ elif menu == "🧠 Model & Performance":
             st.info("Run `python -m src.evaluation.evaluate` to render ROC-AUC curves.")
 
 # =========================================================================
-# 4. EXPLAINABLE AI (XAI)
+# 3. EXPLAINABLE AI (XAI)
 # =========================================================================
 elif menu == "🔬 Explainable AI (XAI)":
     st.markdown('<p class="main-header">🔬 Explainable AI (XAI) Feature Attribution</p>', unsafe_allow_html=True)
@@ -255,51 +235,3 @@ elif menu == "🔬 Explainable AI (XAI)":
             explainer.plot_url_explanation(test_xai_url, save_path="reports/figures/temp_xai.png")
             if os.path.exists("reports/figures/temp_xai.png"):
                 st.image("reports/figures/temp_xai.png", caption="Feature Attribution Waterfall Diagram")
-
-# =========================================================================
-# 5. CIA SECURITY TRIAD & DOCS
-# =========================================================================
-elif menu == "🛡️ CIA Security Triad & Docs":
-    st.markdown('<p class="main-header">🛡️ CIA Security Triad Alignment</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">How deep learning URL classification upholds the core tenets of information security.</p>', unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown("""
-        ### 🔒 Confidentiality
-        - **Threat**: Phishing sites masquerade as legitimate services to harvest credentials, session tokens, and PII.
-        - **Defense**: Proactive URL classification blocks interception before authentication payloads are transmitted.
-        """)
-    with col2:
-        st.markdown("""
-        ### ⚖️ Integrity
-        - **Threat**: Cross-Site Scripting (XSS), URL redirection, and parameter tampering compromise authentic transactions.
-        - **Defense**: Rigorous structural validation prevents users from navigating to manipulated web applications.
-        """)
-    with col3:
-        st.markdown("""
-        ### ⚡ Availability
-        - **Threat**: Malware payloads deployed through credential-stuffing campaigns overwhelm enterprise assets.
-        - **Defense**: Millisecond inference throughput delivers low-latency gateway filtering without hindering throughput.
-        """)
-    
-    st.markdown("---")
-    st.markdown("### 📑 Full Project Architecture Specification")
-    st.markdown("""
-    - **Module 1**: Project Setup & Problem Definition
-    - **Module 2**: Python Environment & Dependencies
-    - **Module 3**: Dataset Acquisition (Synthetic + Kaggle/PhishTank)
-    - **Module 4**: Exploratory Data Analysis & Lexical Pattern Mining
-    - **Module 5**: 48-Feature Engineering & Preprocessing Pipeline
-    - **Module 6**: Machine Learning Baselines (RF, GBDT, LR, SVM)
-    - **Module 7**: Deep Neural Network Architecture with Regularization
-    - **Module 8**: Supervised DNN Training with Dynamic Learning Rates
-    - **Module 9**: Multi-metric Model Evaluation & ROC Benchmarking
-    - **Module 10**: Bayesian Hyperparameter Optimization with Optuna
-    - **Module 11**: Real-time URL Prediction Pipeline
-    - **Module 12**: Interactive Streamlit Dashboard
-    - **Module 13**: Pytest Test Suite
-    - **Module 14**: Explainable AI (SHAP / Feature Attribution)
-    - **Module 15**: Technical Report & Documentation
-    - **Module 16**: Slide Deck & CIA Presentation
-    """)

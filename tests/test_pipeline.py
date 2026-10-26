@@ -1,6 +1,6 @@
 """
 MODULE 13: Testing - Prediction Pipeline Unit Tests
-Verifies prediction pipeline handling of batch inputs, edge cases, and response contracts.
+Verifies prediction pipeline handling of individual URLs, edge cases, and response contracts.
 """
 
 import pytest
@@ -42,16 +42,3 @@ def test_predict_phishing_url(predictor):
     
     assert res['prediction'] == 1 or res['probability'] > 0.4
     assert res['risk_level'] in ['CRITICAL', 'HIGH', 'MODERATE']
-
-
-def test_predict_batch(predictor):
-    urls = [
-        "https://google.com",
-        "http://evil-phish.xyz/login",
-        "https://github.com"
-    ]
-    results = predictor.predict_batch(urls)
-    assert len(results) == 3
-    for r in results:
-        assert 'prediction' in r
-        assert 'label' in r
