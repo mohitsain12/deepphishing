@@ -84,8 +84,7 @@ menu = st.sidebar.radio(
     "Navigation Modules",
     [
         "🔍 Single URL Scanner",
-        "🧠 Model & Performance",
-        "🔬 Explainable AI (XAI)"
+        "🧠 Model & Performance"
     ]
 )
 
@@ -193,45 +192,7 @@ elif menu == "🧠 Model & Performance":
     """)
     
     st.markdown("### 📈 Visual Evaluation Artifacts")
-    fig_cols = st.columns(2)
-    with fig_cols[0]:
-        if os.path.exists("reports/figures/confusion_matrices.png"):
-            st.image("reports/figures/confusion_matrices.png", caption="Confusion Matrices")
-        else:
-            st.info("Run `python -m src.evaluation.evaluate` to render confusion matrices.")
-    with fig_cols[1]:
-        if os.path.exists("reports/figures/roc_curves.png"):
-            st.image("reports/figures/roc_curves.png", caption="ROC-AUC Curves")
-        else:
-            st.info("Run `python -m src.evaluation.evaluate` to render ROC-AUC curves.")
-
-# =========================================================================
-# 3. EXPLAINABLE AI (XAI)
-# =========================================================================
-elif menu == "🔬 Explainable AI (XAI)":
-    st.markdown('<p class="main-header">🔬 Explainable AI (XAI) Feature Attribution</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Deconstruct black-box neural decisions into interpretable lexical and structural signals.</p>', unsafe_allow_html=True)
-    
-    test_xai_url = st.text_input(
-        "URL to inspect with XAI:",
-        value="http://login.google.com.security-verify.tk/auth?id=9928"
-    )
-    if st.button("Generate Feature Attribution Breakdown"):
-        with st.spinner("Computing local attribution vectors..."):
-            exp = explainer.explain_url(test_xai_url)
-            
-            c1, c2 = st.columns(2)
-            with c1:
-                st.markdown("#### 🚨 Signals Pushing Towards 'Phishing'")
-                for f in exp['top_phishing_drivers']:
-                    item = exp['all_contributions'][f]
-                    st.write(f"- **{f}**: Value = `{item['raw_value']}` (Impact: `+{item['impact']}`)")
-            with c2:
-                st.markdown("#### 🛡️ Signals Pushing Towards 'Legitimate'")
-                for f in exp['top_legitimate_drivers']:
-                    item = exp['all_contributions'][f]
-                    st.write(f"- **{f}**: Value = `{item['raw_value']}` (Impact: `{item['impact']}`)")
-                    
-            explainer.plot_url_explanation(test_xai_url, save_path="reports/figures/temp_xai.png")
-            if os.path.exists("reports/figures/temp_xai.png"):
-                st.image("reports/figures/temp_xai.png", caption="Feature Attribution Waterfall Diagram")
+    if os.path.exists("reports/figures/confusion_matrices.png"):
+        st.image("reports/figures/confusion_matrices.png", caption="Confusion Matrices")
+    else:
+        st.info("Run `python -m src.evaluation.evaluate` to render confusion matrices.")
