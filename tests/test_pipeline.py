@@ -9,6 +9,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.pipeline.predict_pipeline import PhishingPredictor
+from src.pipeline import predict_pipeline
 
 
 @pytest.fixture
@@ -42,3 +43,29 @@ def test_predict_phishing_url(predictor):
     
     assert res['prediction'] == 1 or res['probability'] > 0.4
     assert res['risk_level'] in ['CRITICAL', 'HIGH', 'MODERATE']
+
+
+def test_prediction_command_accepts_url_argument(monkeypatch, capsys):
+    class StubPredictor:
+        def predict_url(self, url):
+            return {
+                'url': url,
+                'label': 'LEGITIMATE',
+                'probability': 0.04,
+                'confidence': 0.96,
+                'risk_level': 'SAFE',
+                'key_indicators': ['Valid HTTPS protocol'],
+            }
+
+    monkeypatch.setattr(predict_pipeline, 'PhishingPredictor', StubPredictor)
+    monkeypatch.setattr(
+        predict_pipeline.sys,
+        'argv',
+        ['predict_pipeline', 'https://example.com'],
+    )
+
+    predict_pipeline.main()
+
+    output = capsys.readouterr().out
+    assert 'Prediction: LEGITIMATE' in output
+    assert 'URL: https://example.com' in output

@@ -30,7 +30,7 @@ Start the local web application:
 make app
 ```
 
-The interface provides single-URL scanning, model performance metrics, and explainable-AI feature attribution.
+The Single URL Scanner page provides URL scanning, model performance metrics, and explainable-AI feature attribution.
 
 ## Testing
 

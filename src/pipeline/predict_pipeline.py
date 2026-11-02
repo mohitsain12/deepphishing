@@ -154,15 +154,22 @@ class PhishingPredictor:
 
 def main():
     predictor = PhishingPredictor()
-    test_urls = [
-        "https://www.google.com/search?q=cybersecurity",
-        "http://192.168.1.1/paypal/login/verify.html",
-        "https://github.com/torvalds/linux",
-        "http://secure-login.paypal.com.account-update.tk/verify?auth=token"
-    ]
-    for u in test_urls:
-        res = predictor.predict_url(u)
-        print(f"[{res['label']}] ({res['probability']*100:.1f}% prob | Risk: {res['risk_level']}) -> {u}")
+    url = " ".join(sys.argv[1:]).strip()
+    if not url:
+        url = input("Enter a URL to check: ").strip()
+    if not url:
+        print("A URL is required to make a prediction.")
+        sys.exit(1)
+
+    result = predictor.predict_url(url)
+    print(f"\nPrediction: {result['label']}")
+    print(f"Phishing probability: {result['probability'] * 100:.1f}%")
+    print(f"Confidence: {result['confidence'] * 100:.1f}%")
+    print(f"Risk level: {result['risk_level']}")
+    print(f"URL: {result['url']}")
+    print("Indicators:")
+    for indicator in result['key_indicators']:
+        print(f"- {indicator}")
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ optimize:
 
 # Run prediction pipeline
 predict:
-	python -m src.pipeline.predict_pipeline
+	python -m src.pipeline.predict_pipeline "$(URL)"
 
 # Launch Streamlit app
 app:

@@ -1,0 +1,17 @@
+{
+  "best_params": {
+    "batch_size": 128,
+    "n_layers": 3,
+    "learning_rate": 0.0007332143280199131,
+    "optimizer": "adamw",
+    "use_batch_norm": true,
+    "units_l0": 128,
+    "dropout_l0": 0.3584367206461362,
+    "units_l1": 32,
+    "dropout_l1": 0.26181206418969194,
+    "units_l2": 256,
+    "dropout_l2": 0.20244915673631153
+  },
+  "best_auc": 1.0,
+  "n_trials": 15
+}

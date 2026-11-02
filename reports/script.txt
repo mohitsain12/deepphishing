@@ -1,0 +1,80 @@
+Slide 1 — From URL features to a phishing prediction
+“Hello, today I’ll walk through PhishGuard, a project that analyzes URL structure to 
+estimate whether a URL may be phishing. I’ll cover how the system turns a URL into features, 
+trains and selects a model, and presents a result in the demo. I’ll also point out a couple 
+of important limitations in the current evaluation and explanations.”
+
+Slide 2 — The end-to-end flow
+“The process starts with a URL, extracts 54 features, aligns and scales them, 
+and passes them to a classifier. The application then displays a prediction and indicators. 
+The system analyzes the URL string—it does not visit the site or inspect its content.”
+
+Slide 3 — What the model looks at
+“The features include URL length and character patterns, domain structure, and 
+signals such as HTTPS, IP addresses, and suspicious-looking words.These are clues, 
+not proof: for example, HTTPS alone does not establish that a site is legitimate.”
+
+Slide 4 — Training data and the split
+“The processed dataset has 6,986 rows, divided into training, validation, and test sets.
+The scaler is fitted on training data, while validation supports model selection and 
+the test set is reserved for final evaluation. Keeping those roles distinct helps avoid misleading performance claims.”
+
+Slide 5 — Feature extraction: 54 signals
+“Here’s how the URL becomes a fixed-length vector. The features cover length, character counts,
+binary flags, domain structure, statistics, and path shape. The project saves the feature order
+alongside the scaler so the same arrangement can be reused during inference.”
+
+Slide 6 — Feature extraction, illustrated
+“For this example URL, the extractor records signals such as the protocol,
+domain punctuation and TLD, and login-related words in the path. 
+Those become numeric values in the 54-feature vector. Each signal is an indicator—not a verdict on its own.”
+
+Slide 7 — Preparing features for learning
+“Before training, the project removes duplicate URLs, handles missing or non-finite values,
+and separates the target label from the features. It then makes stratified splits and applies 
+the train-fitted scaler consistently. Maintaining the same feature order and scaling at inference is essential.”
+
+Slide 8 — Standard DNN training architecture
+“This diagram shows the standard DNN training architecture: four dense layers followed by a sigmoid output. 
+One distinction matters for the live demo: inference tries best_optimized_dnn.h5 first when it is present and 
+loadable, then tries saved fallbacks. So this diagram describes the standard training architecture, 
+not necessarily the artifact selected at runtime.”
+
+Slide 9 — How training works
+“During training, the model produces a probability, compares it with the known label using binary cross-entropy, 
+and updates its weights with Adam. Class weights help account for label distribution, while validation callbacks 
+can stop training early or save the best checkpoint. The entry point allows up to 40 epochs, though training may stop sooner.”
+
+Slide 10 — How a new URL is predicted
+“At inference, the system extracts the same features, aligns them using the saved feature names, applies 
+the saved scaler, and obtains a phishing probability. A threshold of 0.50 determines the label; 
+the probability also maps to a risk band. If no saved model loads, the pipeline uses a rule-based heuristic fallback.”
+
+Slide 11 — What the explanation means
+“The attribution table ranks selected feature indicators using a heuristic. It is not SHAP, 
+and it does not prove which learned DNN weights caused the prediction. There can also be a 
+model mismatch: the explainer may use a baseline Random Forest even while prediction uses a DNN. 
+I’ll describe these as heuristic indicators, not a faithful explanation of the score.”
+
+Slide 12 — Live demo
+
+“In the demo, I’ll enter an example URL, run the analysis, and show the label, probability, 
+confidence, and risk band. Then I’ll open the extracted signals and attribution table. 
+I’ll use example URLs only and won’t visit suspicious links or enter real credentials.”
+
+Slide 13 — Evaluation metrics need reconciliation
+“The saved evaluation file reports perfect scores, while the app’s benchmark table shows 
+different results. Neither snapshot should be treated as independently verified performance yet. 
+The right next step is to rerun evaluation on the held-out test data and check the split, preprocessing, 
+dataset provenance, and artifact alignment before presenting performance claims.”
+
+Slide 14 — Reproducing the project
+“The Makefile provides commands for preparing data, training, evaluating, running the app,
+and optional optimization. These commands make the workflow reproducible from the repository root;
+the README covers environment setup and tests.”
+
+Slide 15 — Takeaways and next steps
+“To summarize: PhishGuard turns a URL into engineered features, applies the saved 
+preprocessing and a model to produce a score, and presents the result in an interactive app. 
+The main priorities are to reconcile the metrics, make explanations faithful to the prediction 
+model—or clearly label them as heuristic—and verify model and feature alignment. Thank you.”
